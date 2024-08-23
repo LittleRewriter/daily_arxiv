@@ -40,6 +40,6 @@ jobs:
           msgtype: markdown
           content: |
             {
-              "title": ${{ steps.version.outputs.builddate }},
-              "text": ${{ steps.description.outputs.content }}
+              "title": "${{ steps.version.outputs.builddate }}",
+              "text": "${{ steps.description.outputs.content }}"
             }
