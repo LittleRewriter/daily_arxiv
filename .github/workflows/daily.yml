@@ -32,10 +32,6 @@ jobs:
           echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         id: version  # this is used on variable path
 
-      - name: "Debug Json"
-        run: |
-          echo "${{steps.description.outputs.content}}"
-
       - name: send dingtalk message
         uses: ghostoy/dingtalk-action@master
         with:
