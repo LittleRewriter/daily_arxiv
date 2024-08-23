@@ -49,7 +49,7 @@ jobs:
         uses: ghostoy/dingtalk-action@master
         with:
           webhook: ${{ secrets.DING_URL }}
-          secret: %{{ secrets.DING_SEC }}
+          secret: ${{ secrets.DING_SEC }}
           msgtype: markdown
           content: |
             {
