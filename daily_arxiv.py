@@ -42,7 +42,7 @@ def get_daily_code(DateToday,cats):
                 cnt += 1
                 repo_url = r["official"]["url"]
                 repo_name = repo_url.split("/")[-1]
-                content[_id] = f"|[{paper_title}]({paper_url})|[{repo_name}]({repo_url})|{paper_abs}|\n"
+                content[_id] = f"|[{paper_title}]({paper_url})|[{repo_name}]({repo_url})|{paper_abs}|\\n"
         except Exception as e:
             print(f"exception: {e} with id: {_id}")
     return content
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     data = get_daily_code(day,cats)
     print(data)
     with open("daily_out.md", "w") as f:
-        f.write("|paper|code|abstract|\n" + "|---|---|---|\n")
+        f.write("|paper|code|abstract|\\n" + "|---|---|---|\\n")
         for k, v in data.items():
             f.write(v)
     # update_daily_json("daily.json",data_all)
