@@ -18,12 +18,15 @@ jobs:
     name: update
     runs-on: ubuntu-latest
     steps:
-
+      - name: Checkout
+        uses: actions/checkout@v3.0.2
+      
+          
       - name: Read file content
         id: description
-        uses: juliangruber/read-file-action@v1
+        uses: jaywcjlove/github-action-read-file@main
         with:
-          path: ./daily_out.txt
+          path: daily_out.md
       
       - name: "Set current date as env variable"
         run: |
@@ -38,6 +41,6 @@ jobs:
           msgtype: markdown
           content: |
             {
-              "title": ${{ steps.version.outputs }},
-              "text": ${{ steps.description.outputs }}
+              "title": ${{ steps.version.outputs.builddate }},
+              "text": ${{ steps.description.outputs.content }}
             }
