@@ -2,8 +2,8 @@ name: Run Daily Arxiv
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "00 12 * * *"
+  schedule:
+    - cron: "00 12 * * *"
   # push:
   #   branches:
   #     - main
@@ -40,12 +40,12 @@ jobs:
         uses: jaywcjlove/github-action-read-file@main
         with:
           path: daily_out.md
-      
+        
       - name: "Set current date as env variable"
         run: |
           echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         id: version  # this is used on variable path
-
+  
       - name: send dingtalk message
         uses: ghostoy/dingtalk-action@master
         with:
@@ -54,6 +54,6 @@ jobs:
           msgtype: markdown
           content: |
             {
-              "title": ${{ steps.version.outputs.builddate }},
-              "text": ${{ steps.description.outputs.content }}
+              "title": "${{ steps.version.outputs.builddate }}",
+              "text":  ${{steps.description.outputs.content}}
             }
