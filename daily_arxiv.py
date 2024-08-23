@@ -24,7 +24,7 @@ def get_daily_code(DateToday,cats):
             for item in tmp:
                 if item["id"] not in output:
                     output[item["id"]] = item
-        time.sleep(30)
+        time.sleep(3)
 
     base_url = "https://arxiv.paperswithcode.com/api/v0/papers/"
     cnt = 0
@@ -34,6 +34,7 @@ def get_daily_code(DateToday,cats):
         _id = v["id"]
         paper_title = " ".join(v["title"].split())
         paper_url = v["url"]
+        paper_abs = v["abstract"]
         url = base_url + _id
         try:
             r = requests.get(url).json()
@@ -41,12 +42,10 @@ def get_daily_code(DateToday,cats):
                 cnt += 1
                 repo_url = r["official"]["url"]
                 repo_name = repo_url.split("/")[-1]
-
-                content[_id] = f"|[{paper_title}]({paper_url})|[{repo_name}]({repo_url})|\n"
+                content[_id] = f"|[{paper_title}]({paper_url})|[{repo_name}]({repo_url})|{paper_abs}|\n"
         except Exception as e:
             print(f"exception: {e} with id: {_id}")
-    data = {DateToday:content}
-    return data
+    return content
 
 def update_daily_json(filename,data_all):
     with open(filename,"r") as f:
@@ -101,16 +100,19 @@ def json_to_md(filename):
 if __name__ == "__main__":
 
     DateToday = datetime.date.today()
-    N = 7 # 往前查询的天数
+    N = 2 # 往前查询的天数
     data_all = []
-    for i in range(1,N):
-        day = str(DateToday + timedelta(-i))
+    day = str(DateToday + timedelta(-1))
         # you can add the categories in cats
-        cats = {
-        "eess":["eess.SP"],
+    cats = {
+        # "eess":["eess.SP"],
         "cs":["cs.IT"]
     }
-        data = get_daily_code(day,cats)
-        data_all.append(data)
-    update_daily_json("daily.json",data_all)
-    json_to_md("daily.json")
+    data = get_daily_code(day,cats)
+    print(data)
+    with open("daily_out.md", "w") as f:
+        f.write("|paper|code|abstract|\n" + "|---|---|---|\n")
+        for k, v in data.items():
+            f.write(v)
+    # update_daily_json("daily.json",data_all)
+    # json_to_md("daily.json")
