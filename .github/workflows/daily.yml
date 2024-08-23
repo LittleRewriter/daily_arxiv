@@ -41,5 +41,5 @@ jobs:
           content: |
             {
               "title": "${{ steps.version.outputs.builddate }}",
-              "text": "${{ steps.description.outputs.content }}"
+              "text":  steps.description.outputs.content "
             }
