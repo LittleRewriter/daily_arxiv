@@ -1,17 +1,9 @@
-name: Run Daily Arxiv
+name: Publish Test
 
 on:
   workflow_dispatch:
   # schedule:
   #   - cron: "00 12 * * *"
-  push:
-    branches:
-      - main
-env:
-
-  GITHUB_NAME: zhuwenxing
-  GITHUB_EMAIL: wenxing.zhu@qq.com
-
 
 jobs:
   sync:
