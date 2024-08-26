@@ -45,7 +45,7 @@ def get_daily_code(DateToday, cats):
                 cnt += 1
                 repo_url = r["official"]["url"]
                 repo_name = repo_url.split("/")[-1]
-                content[_id] = f"## [{paper_title}]({paper_url}) \n\nrepo: [{repo_name}]({repo_url}) \n\n"
+                content[_id] = f"[{paper_title}]({paper_url}), {repo_name}\n\n"
         except Exception as e:
             print(f"exception: {e} with id: {_id}")
     return content
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         # you can add the categories in cats
     cats = {
         # "eess":["eess.SP"],
-        "cs":["cs.cv", "cs.gr", "cs.hc", "cs.lg", "cs.mm", "cs.si", "cs.cl"],
+        "cs":["cs.cv", "cs.gr", "cs.hc", "cs.ai"],
         "physics":["physics.comp-ph"]
     }
     data = get_daily_code(day,cats)
