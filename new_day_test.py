@@ -5,39 +5,35 @@ import requests
 import json
 from datetime import timedelta
 
-isEmpty = True
 
-def get_daily_code(DateToday, cats):
+def get_daily_code(DateToday,cats):
     """
     @param DateToday: str
     @param cats: dict
     @return paper_with_code: dict
     """
-    global isEmpty
-    # from_day = until_day = DateToday
-    from_day = until_day = '2024-08-21'
+    from_day = until_day = DateToday
     content = dict()
     # content
     output = dict()
     for k,v in cats.items():
-        scraper = arxivscraper.Scraper(category=k, date_from=from_day,date_until=until_day)
+        scraper = arxivscraper.Scraper(category=k, date_from=from_day,date_until=until_day,filters={'categories':v})
         tmp = scraper.scrape()
+        print(tmp)
         if isinstance(tmp,list):
             for item in tmp:
                 if item["id"] not in output:
-                    # print(v, item["categories"], [(x in v) for x in item["categories"]])
-                    if any([(x in item["categories"]) for x in v]):
-                        output[item["id"]] = item
-            isEmpty = False
-        time.sleep(10)
+                    output[item["id"]] = item
+        time.sleep(30)
+
     base_url = "https://arxiv.paperswithcode.com/api/v0/papers/"
     cnt = 0
 
     for k,v in output.items():
+        print(v["id"])
         _id = v["id"]
         paper_title = " ".join(v["title"].split())
         paper_url = v["url"]
-        paper_abs = v["abstract"]
         url = base_url + _id
         try:
             r = requests.get(url).json()
@@ -45,10 +41,12 @@ def get_daily_code(DateToday, cats):
                 cnt += 1
                 repo_url = r["official"]["url"]
                 repo_name = repo_url.split("/")[-1]
-                content[_id] = f"## [{paper_title}]({paper_url}) \n\nrepo: [{repo_name}]({repo_url}) \n\n"
+
+                content[_id] = f"|[{paper_title}]({paper_url})|[{repo_name}]({repo_url})|\n"
         except Exception as e:
             print(f"exception: {e} with id: {_id}")
-    return content
+    data = {DateToday:content}
+    return data
 
 def update_daily_json(filename,data_all):
     with open(filename,"r") as f:
@@ -103,24 +101,16 @@ def json_to_md(filename):
 if __name__ == "__main__":
 
     DateToday = datetime.date.today()
-    N = 2 # 往前查询的天数
+    N = 7 # 往前查询的天数
     data_all = []
-    day = str(DateToday + timedelta(-1))
+    for i in range(1,N):
+        day = str(DateToday + timedelta(-i))
         # you can add the categories in cats
-    cats = {
-        # "eess":["eess.SP"],
-        "cs":["cs.cv", "cs.gr", "cs.hc", "cs.lg", "cs.mm", "cs.si", "cs.cl"],
-        "physics":["physics.comp-ph"]
+        cats = {
+        "eess":["eess.SP"],
+        "cs":["cs.IT"]
     }
-    data = get_daily_code(day,cats)
-    print(data)
-    res = ""
-    for k, v in data.items():
-        res += v
-    with open("daily_out.md", "w") as f:
-        if isEmpty:
-            f.write("今天是休假喵~")
-        else:
-            f.write(json.dumps(res))
-    # update_daily_json("daily.json",data_all)
-    # json_to_md("daily.json")
+        data = get_daily_code(day,cats)
+        data_all.append(data)
+    update_daily_json("daily.json",data_all)
+    json_to_md("daily.json")
