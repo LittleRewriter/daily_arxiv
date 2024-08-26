@@ -25,7 +25,7 @@ def get_daily_code(DateToday,cats):
                 if item["id"] not in output:
                     output[item["id"]] = item
         time.sleep(3)
-
+    print(output)
     base_url = "https://arxiv.paperswithcode.com/api/v0/papers/"
     cnt = 0
 
