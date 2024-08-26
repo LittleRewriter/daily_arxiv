@@ -1,5 +1,4 @@
-name: Run Daily Arxiv
-
+name: Gen md file
 on:
   workflow_dispatch:
   schedule:
