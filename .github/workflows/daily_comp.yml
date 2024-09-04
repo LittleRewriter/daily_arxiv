@@ -31,14 +31,15 @@ jobs:
           pip install requests
 
       - name: Run daily arxiv 
+        id: pythonres
         run: |
           python daily_arxiv.py
           
-      - name: Read file content
-        id: description
-        uses: jaywcjlove/github-action-read-file@main
-        with:
-          path: daily_out.md
+      # - name: Read file content
+      #   id: description
+      #   uses: jaywcjlove/github-action-read-file@main
+      #   with:
+      #     path: daily_out.md
         
       - name: "Set current date as env variable"
         run: |
@@ -54,5 +55,5 @@ jobs:
           content: |
             {
               "title": "${{ steps.version.outputs.builddate }}",
-              "text":  ${{steps.description.outputs.content}}
+              "text":  ${{steps.pythonres.outputs.content}}
             }
