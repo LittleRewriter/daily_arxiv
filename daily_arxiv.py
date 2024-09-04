@@ -53,6 +53,7 @@ def get_code(ent_py: dict[str, arxiv_entry]):
         try:
             r = requests.get(url).json()
             if "official" in r and r["official"]:
+                print(r)
                 cnt += 1
                 repo_url = r["official"]["url"]
                 repo_name = repo_url.split("/")[-1]
@@ -75,14 +76,14 @@ if __name__ == "__main__":
     ]
     res = dict()
     for s in cats:
-        print("get cat", s, ":")
         get_arxiv_result(res, s, 100, day)
+        print(f"cat {s}, sum result {len(res)}")
     fmt_md = get_code(res)
     res_str = ""
     for k, v in fmt_md.items():
         res_str += v
     with open(os.environ["GITHUB_OUTPUT"], "a") as f:
         if len(fmt_md) == 0:
-            f.write("content=今天是休假喵~")
+            f.write(f"content={json.dumps("今天是休假喵~")}")
         else:
             f.write(f"content={json.dumps(res_str)}")
