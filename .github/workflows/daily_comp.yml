@@ -10,6 +10,10 @@ on:
 env:
 
   GITHUB_NAME: littlerewriter
+  TX_ID: ${{ secrets.TX_ID }}        # tencent pub
+  TX_KEY: ${{ secrets.TX_KEY }}      # tencent key
+  DING_URL: ${{ secrets.DING_URL }}  # dingding token 
+  DING_SEC: ${{ secrets.DING_SEC }}  # dingding secret
 
 
 jobs:
@@ -29,6 +33,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install arxivscraper
           pip install requests
+          pip install tencentcloud-sdk-python
 
       - name: Run daily arxiv 
         id: pythonres
@@ -41,19 +46,19 @@ jobs:
       #   with:
       #     path: daily_out.md
         
-      - name: "Set current date as env variable"
-        run: |
-          echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-        id: version  # this is used on variable path
+      # - name: "Set current date as env variable"
+      #   run: |
+      #     echo "builddate=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      #   id: version  # this is used on variable path
   
-      - name: send dingtalk message
-        uses: ghostoy/dingtalk-action@master
-        with:
-          webhook: ${{ secrets.DING_URL }}
-          secret: ${{ secrets.DING_SEC }}
-          msgtype: markdown
-          content: |
-            {
-              "title": "${{ steps.version.outputs.builddate }}",
-              "text":  ${{steps.pythonres.outputs.content}}
-            }
+      # - name: send dingtalk message
+      #   uses: ghostoy/dingtalk-action@master
+      #   with:
+      #     webhook: ${{ secrets.DING_URL }}
+      #     secret: ${{ secrets.DING_SEC }}
+      #     msgtype: markdown
+      #     content: |
+      #       {
+      #         "title": "${{ steps.version.outputs.builddate }}",
+      #         "text":  ${{steps.pythonres.outputs.content}}
+      #       }
