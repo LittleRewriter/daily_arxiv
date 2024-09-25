@@ -157,7 +157,7 @@ if __name__ == "__main__":
     fmt_md = get_code(client, res)
     
     if len(fmt_md) == 0:
-        send_ding(DateToday, "今天是休假喵~", ding_sec, ding_tok)
+        send_ding(str(DateToday), "今天是休假喵~", ding_sec, ding_tok)
     else:
         res_str = ""
         idx = 1
